@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Telugu Random Chat</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    #chat-box {
+      width: 90%;
+      max-width: 450px;
+      height: 400px;
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      overflow-y: scroll;
+      padding: 10px;
+      background: white;
+    }
+    #input {
+      width: 80%;
+      height: 40px;
+      margin-top: 10px;
+      padding: 5px;
+    }
+    #send-btn, #next-btn {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background: #ff0066;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔥 Telugu Random Chat (Beta)</h2>
+<p>Click “Next” to connect with a new person.</p>
+
+<div id="chat-box"></div>
+
+<input type="text" id="input" placeholder="Type message...">
+<button id="send-btn">Send</button>
+<button id="next-btn">Next</button>
+
+<script>
+document.getElementById('send-btn').onclick = function() {
+  let msg = document.getElementById('input').value;
+  if (msg.trim() !== "") {
+    let box = document.getElementById('chat-box');
+    box.innerHTML += "<div><b>You:</b> " + msg + "</div>";
+    box.scrollTop = box.scrollHeight;
+    document.getElementById('input').value = "";
+  }
+};
+
+document.getElementById('next-btn').onclick = function() {
+  alert("Next user feature works after backend setup in Step 6");
+};
+</script>
+
+</body>
+</html>
