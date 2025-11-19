@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Telugu Random Chat</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    h2 {
+      margin-top: 20px;
+      color: #ff007f;
+    }
+    #chat-box {
+      width: 90%;
+      max-width: 450px;
+      height: 420px;
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      overflow-y: auto;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 10px;
+    }
+    #input {
+      width: 80%;
+      height: 40px;
+      margin-top: 10px;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #send-btn, #next-btn {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      background: #ff0066;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #send-btn:hover, #next-btn:hover {
+      background: #cc0052;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🔥 Telugu Random Chat (Live)</h2>
+<p>Connect with random Telugu people. Click Next to switch partner.</p>
+
+<div id="chat-box"><i>Connecting to server...</i></div>
+
+<input type="text" id="input" placeholder="Type message...">
+<br>
+<button id="send-btn">Send</button>
+<button id="next-btn">Next</button>
+
+<script>
+let socket;
+
+function connectSocket() {
+    socket = new WebSocket("wss://telugu-random-chat.onrender.com");
+
+    socket.onopen = function () {
+        document.getElementById("chat-box").innerHTML += "<div><i>Connected. Waiting for partner...</i></div>";
+    };
+
+    socket.onmessage = function (event) {
+        let data = JSON.parse(event.data);
+        let box = document.getElementById("chat-box");
+
+        if (data.system) {
+            box.innerHTML += "<div><i>" + data.system + "</i></div>";
+        }
+
+        if (data.message) {
+            box.innerHTML += "<div><b>Stranger:</b> " + data.message + "</div>";
+        }
+
+        box.scrollTop = box.scrollHeight;
+    };
+
+    socket.onclose = function () {
+        let box = document.getElementById("chat-box");
+        box.innerHTML = "<i>Disconnected. Reconnecting...</i>";
+        setTimeout(connectSocket, 1000);
+    };
+}
+
+connectSocket();
+
+document.getElementById("send-btn").onclick = function () {
+    let msg = document.getElementById("input").value;
+
+    if (msg.trim() !== "" && socket.readyState === WebSocket.OPEN) {
+        socket.send(msg);
+        let box = document.getElementById("chat-box");
+        box.innerHTML += "<div><b>You:</b> " + msg + "</div>";
+        document.getElementById("input").value = "";
+        box.scrollTop = box.scrollHeight;
+    }
+};
+
+document.getElementById("next-btn").onclick = function () {
+    document.getElementById("chat-box").innerHTML = "<i>Searching for a new partner...</i>";
+    socket.close();
+};
+</script>
+
+</body>
+</html>
